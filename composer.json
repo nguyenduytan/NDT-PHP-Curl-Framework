@@ -32,10 +32,10 @@
     }
   },
   "suggest": {
-    "nyholm/psr7": "For PSR-7 request/response objects in PSR-18 adapter",
+    "nyholm/psr7": "PSR-7 implementation for PSR-18 adapter",
     "psr/simple-cache": "Enable PSR-16 cache for HTTP caching & rate limiter",
     "open-telemetry/api": "Enable OpenTelemetry spans",
-    "opis/json-schema": "Enable response schema validation",
+    "opis/json-schema": "Optional JSON Schema validation (v0.3+)",
     "guzzlehttp/psr7": "Alternative PSR-7 implementation"
   },
   "require-dev": {
@@ -44,5 +44,9 @@
   },
   "scripts": {
     "test": "phpunit --testdox"
-  }
+  },
+  "version": "0.2.0",
+  "bin": [
+    "bin/ndt-http"
+  ]
 }

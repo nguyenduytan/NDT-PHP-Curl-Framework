@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+// Minimal CLI: ndt-http GET https://httpbin.org/get -H "Accept: application/json" -d '{"a":1}' --json
+use ndtan\Curl\Http\Http;
+if (PHP_SAPI !== 'cli') { fwrite(STDERR, "CLI only\n"); exit(1); }
+array_shift($argv);
+$method = strtoupper($argv[0] ?? 'GET');
+$url = $argv[1] ?? null;
+if (!$url) { fwrite(STDERR, "Usage: ndt-http <METHOD> <URL> [--json] [-H \"K: V\"] [-d DATA]\n"); exit(2); }
+$json = in_array('--json', $argv, true);
+$headers = [];
+for ($i=0; $i<count($argv); $i++) {
+    if ($argv[$i] === '-H' && isset($argv[$i+1])) {
+        [$k,$v] = array_map('trim', explode(':', $argv[$i+1], 2));
+        $headers[$k] = $v;
+    }
+}
+$data = null;
+for ($i=0; $i<count($argv); $i++) {
+    if ($argv[$i] === '-d' && isset($argv[$i+1])) { $data = $argv[$i+1]; }
+}
+$b = Http::to($url)->method($method)->headers($headers);
+if ($json) { $b->asJson()->expectJson(); if ($data) $b->data(json_decode($data, true)); }
+else if ($data) { $b->data($data); }
+$res = $b->send();
+$status = $res->status();
+fwrite(STDOUT, $res->body());
+exit($status >= 200 && $status < 400 ? 0 : 1);

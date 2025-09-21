@@ -15,6 +15,9 @@ use Psr\Log\LoggerInterface;
 
 final class RequestBuilder
 {
+    private ?array $hedge = null;
+    private bool $http3Auto = false;
+{
     private string $method = 'GET';
     private string $url;
     private array $query = [];
@@ -92,6 +95,8 @@ final class RequestBuilder
     public function hedge(?int $afterMs, int $max=1): self { $this->hedgeAfterMs=$afterMs; $this->hedgeMax=$max; return $this; }
 
     public function redirects(int $max=10, bool $crossHost=false, array $preserveAuthOn=[307,308]): self { $this->followRedirects=true; $this->maxRedirects=$max; $this->allowCrossHostRedirects=$crossHost; $this->preserveAuthOn=$preserveAuthOn; return $this; }
+
+    public function http3Auto(bool $enable = true){ $this->http3Auto = $enable; return $this; }
 
     public function tls(array $opts): self { $this->tls = array_merge($this->tls, $opts); return $this; }
     public function deadline(float $unixSeconds): self { $this->deadline = $unixSeconds; return $this; }
@@ -244,6 +249,8 @@ final class RequestBuilder
             }
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $hdr);
+
+        if (\$this->http3Auto && defined('CURL_HTTP_VERSION_3')) { curl_setopt(\$ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_3); }
 if ($this->resumeFrom) curl_setopt($ch, CURLOPT_RESUME_FROM, $this->resumeFrom);
 
         foreach ($this->opts as $k=>$v) {
@@ -369,4 +376,15 @@ if ($this->resumeFrom) curl_setopt($ch, CURLOPT_RESUME_FROM, $this->resumeFrom);
 
         return $response;
     }
+}
+
+
+private function sendWithHedge(){
+    $mk = function(){
+        $ch = curl_init();
+        $this->applyCommonOpts($ch);
+        return $ch;
+    };
+    [$body, $info, $errno] = \ndtan\Curl\Runner\HedgeRunner::run($mk, $this->hedge['after'], $this->hedge['max']);
+    return \ndtan\Curl\Http\Response::fromCurl($body, $info, $errno);
 }
