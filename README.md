@@ -300,11 +300,5 @@ Includes a basic PHPUnit test; add your own integration tests with **VCR**.
 
 ---
 
-## Roadmap
-- **v0.2**: curl_multi pool + real **hedging**, OAuth2 refresh middleware, AWS SigV4 addon, richer logging/redaction, rate limiter helpers, CLI `ndt-http`, HTTP/3 auto‑fallback.
-- **v0.3**: Proxy rotation, JSON schema validation helpers, pagination utilities, HAR export.
-
----
-
 ## License
 MIT © Tony Nguyen
