@@ -1,0 +1,47 @@
+{
+  "name": "ndtan/php-curl-framework",
+  "description": "NDT PHP cURL Framework \u2014 chainable HTTP client & PSR-18 adapter built on ext-curl: retries with decorrelated jitter, hedged requests, circuit breaker, async pool, TLS pinning, caching, VCR, logging, and Laravel/Symfony integrations.",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "curl",
+    "http",
+    "psr-18",
+    "psr-7",
+    "retry",
+    "hedge",
+    "circuit-breaker",
+    "otel",
+    "cache",
+    "vcr",
+    "laravel",
+    "symfony",
+    "ndtan"
+  ],
+  "require": {
+    "php": ">=8.1",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "psr/http-client": "^1.0",
+    "psr/http-message": "^1.0",
+    "psr/log": "^1.1 || ^2.0 || ^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ndtan\\Curl\\": "src/"
+    }
+  },
+  "suggest": {
+    "nyholm/psr7": "For PSR-7 request/response objects in PSR-18 adapter",
+    "psr/simple-cache": "Enable PSR-16 cache for HTTP caching & rate limiter",
+    "open-telemetry/api": "Enable OpenTelemetry spans",
+    "opis/json-schema": "Enable response schema validation",
+    "guzzlehttp/psr7": "Alternative PSR-7 implementation"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5"
+  },
+  "scripts": {
+    "test": "phpunit --testdox"
+  }
+}
