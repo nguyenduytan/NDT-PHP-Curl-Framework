@@ -39,7 +39,8 @@
     "guzzlehttp/psr7": "Alternative PSR-7 implementation"
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.5"
+    "phpunit/phpunit": "^10.5",
+    "psr/simple-cache": "^3.0"
   },
   "scripts": {
     "test": "phpunit --testdox"

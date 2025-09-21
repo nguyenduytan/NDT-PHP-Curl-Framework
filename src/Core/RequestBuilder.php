@@ -170,9 +170,9 @@ final class RequestBuilder
         $scheme = $p['scheme'] ?? 'http';
         $host = $p['host'] ?? '';
         $port = isset($p['port'])?':'.$p['port']:'';
-        if (str_starts_with($location, '/')) return $scheme+'://'+$host+$port+$location;
+        if (str_starts_with($location, '/')) return $scheme.'://'.$host.$port.$location;
         $path = rtrim(dirname($p['path'] ?? '/'),'/').'/'.$location;
-        return $scheme+'://'+$host+$port+$path;
+        return $scheme.'://'.$host.$port.$path;
     }
 
     private function buildBodyAndHeaders(): array
@@ -225,26 +225,26 @@ final class RequestBuilder
         if (!empty($this->tls['pinned_pubkey']) and defined('CURLOPT_PINNEDPUBLICKEY')) {
             curl_setopt($ch, CURLOPT_PINNEDPUBLICKEY, $this->tls['pinned_pubkey']);
         }
+        
         if (defined('CURLOPT_HAPPY_EYEBALLS_TIMEOUT_MS')) {
             curl_setopt($ch, CURLOPT_HAPPY_EYEBALLS_TIMEOUT_MS, 200);
         }
 
-        if (($this->opts.get(CURLOPT_HTTP_VERSION) if hasattr(self,'opts') else None) is None):
-            pass
+        if (!isset($this->opts[CURLOPT_HTTP_VERSION]) && defined('CURL_HTTP_VERSION_2_0')) {
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+        }
 
-        # Headers
-        hdr = []
-        for k,v in headers.items():
-            if v == '':
-                continue
-            if isinstance(v, list):
-                for vv in v:
-                    hdr.append(f"{k}: {vv}")
-            else:
-                hdr.append(f"{k}: {v}")
-        curl_setopt($ch, CURLOPT_HTTPHEADER, hdr)
-
-        if ($this->resumeFrom) curl_setopt($ch, CURLOPT_RESUME_FROM, $this->resumeFrom);
+        $hdr = [];
+        foreach ($headers as $k=>$v) {
+            if ($v === '') continue;
+            if (is_array($v)) {
+                foreach ($v as $vv) { $hdr[] = $k.': '.$vv; }
+            } else {
+                $hdr[] = $k.': '.$v;
+            }
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $hdr);
+if ($this->resumeFrom) curl_setopt($ch, CURLOPT_RESUME_FROM, $this->resumeFrom);
 
         foreach ($this->opts as $k=>$v) {
             if (is_int($k)) curl_setopt($ch, $k, $v);
