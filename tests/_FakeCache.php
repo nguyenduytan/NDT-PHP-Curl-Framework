@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use Psr\SimpleCache\CacheInterface;
-use DateInterval;
 
 final class _FakeCache implements CacheInterface
 {
@@ -13,7 +12,7 @@ final class _FakeCache implements CacheInterface
         return array_key_exists($key, $this->s) ? $this->s[$key] : $default;
     }
 
-    public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
+    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
         $this->s[$key] = $value;
         return true;
@@ -40,7 +39,7 @@ final class _FakeCache implements CacheInterface
         return $out;
     }
 
-    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
+    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
     {
         foreach ($values as $k => $v) {
             $this->set((string)$k, $v, $ttl);
