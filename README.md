@@ -18,7 +18,7 @@ and <b>Laravel/Symfony</b> integrations.
 </p>
 
 <p>
-  <a href="https://github.com/nguyenduytan/NDT-PHP-Curl-Framework/actions"><img alt="CI" src="https://github.com/nguyenduytan/NDT-PHP-Curl-Framework/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/nguyenduytan/NDT-PHP-Curl-Framework/actions"><img alt="CI" src="https://github.com/nguyenduytan/NDT-PHP-Curl-Framework/actions/workflows/php.yml/badge.svg"></a>
 </p>
 
 </div>
